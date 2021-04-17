@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"   // https://docs.nestjs.cn/7/openapi?id=%e8%a3%85%e9%a5%b0%e5%99%a8中查询变名的装饰器
-import { modelOptions, prop } from "@typegoose/typegoose"
+import { modelOptions, prop, Ref } from "@typegoose/typegoose"
+import { Episode } from "./episode.model"
 
 @modelOptions({
     schemaOptions: {
@@ -7,11 +8,14 @@ import { modelOptions, prop } from "@typegoose/typegoose"
     }
 })
 export class Course {
-    @ApiProperty({ description: '用户名', example: 'user1'})          // 命名后就可以在接口文档中看到了。ApiModelProperty换名为ApiProperty
-    @prop()         // 装饰属性
-    username: string
+    @ApiProperty({ description: '课程名称'})          // 命名后就可以在接口文档中看到了。ApiModelProperty换名为ApiProperty
+    @prop()         // 装饰属性,name才会保存到数据库
+    name: string
 
-    @ApiProperty({ description: '密码', example: "pass1"}) 
+    @ApiProperty({ description: '封面图'}) 
     @prop()
-    password: string
+    cover: string
+
+    @prop({ itemsRef: 'Episode'})     // arrayProp被弃用
+    episodes: Ref<Episode>[]      // 关联外键
 }
